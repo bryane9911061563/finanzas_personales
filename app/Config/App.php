@@ -23,7 +23,24 @@ class App extends BaseConfig
      *
      * @var string
      */
-    public $baseURL = 'http://localhost:8080/';
+    public  $baseURL;
+
+    public function __construct()
+    {
+        $this->baseURL = $this->urlInstaceProp();
+    }
+
+    public function urlInstaceProp()
+    {
+        $config['base_url'] = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
+        $config['base_url'] .= "://" . $_SERVER['HTTP_HOST'];
+        if (!isset($_SERVER['ORIG_SCRIPT_NAME'])) {
+            $config['base_url'] .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
+        } else {
+            $config['base_url'] .= str_replace(basename($_SERVER['ORIG_SCRIPT_NAME']), "", $_SERVER['ORIG_SCRIPT_NAME']);
+        }
+        return $config['base_url'];
+    }
 
     /**
      * --------------------------------------------------------------------------
